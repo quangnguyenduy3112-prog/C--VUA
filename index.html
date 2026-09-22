@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Game cờ vua trực tuyến với AI siêu mạnh. Chế độ PvP và PvE. Thiết kế premium.">
+  <title>♚ Cờ Vua — Chess Master AI</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>♚</text></svg>">
+  <link rel="stylesheet" href="styles/main.css?v=2">
+</head>
+<body>
+  <!-- Background is set in CSS -->
+  
+  <div class="app-container">
+    <!-- Left Sidebar -->
+    <aside class="left-sidebar">
+      <div class="brand">
+        <div class="logo">♚</div>
+        <h1>Cờ Vua</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active"><span class="nav-icon">♟</span> Chơi</a>
+      </nav>
+    </aside>
+
+    <!-- Center Board Area -->
+    <main class="main-board-area">
+      <!-- Opponent Profile -->
+      <div class="player-profile opponent" id="opponent-profile">
+        <div class="profile-left">
+          <div class="avatar">🤖</div>
+          <div class="player-info-text">
+            <div class="player-name" id="opponent-name">Máy tính</div>
+            <div class="player-status" id="opponent-status"></div>
+          </div>
+        </div>
+        <div class="captured-pieces" id="opponent-captured"></div>
+        <div class="thinking-spinner" id="opponent-thinking" style="display: none;"></div>
+      </div>
+
+      <!-- Chess Board -->
+      <div id="board-container"></div>
+
+      <!-- Player Profile -->
+      <div class="player-profile player" id="player-profile">
+        <div class="profile-left">
+          <div class="avatar">👤</div>
+          <div class="player-info-text">
+            <div class="player-name" id="player-name">Bạn</div>
+            <div class="player-status" id="player-status"></div>
+          </div>
+        </div>
+        <div class="captured-pieces" id="player-captured"></div>
+        <div class="thinking-spinner" id="player-thinking" style="display: none;"></div>
+      </div>
+    </main>
+
+    <!-- Right Controls Panel -->
+    <aside class="right-panel">
+      <!-- Game Status Card -->
+      <div class="panel-card status-card">
+        <div id="status-text" class="status-main-text">Chào mừng!</div>
+        <div id="thinking-indicator" class="thinking-indicator">
+          <div class="spinner"></div>
+          <span>AI đang suy nghĩ...</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="panel-card actions-card">
+        <button class="btn btn-accent btn-large" id="btn-new-game">
+          <span class="btn-icon">✨</span> Ván mới
+        </button>
+        <div class="actions-row">
+          <button class="btn" id="btn-flip">
+            <span class="btn-icon">🔄</span> Lật bàn
+          </button>
+          <button class="btn btn-danger" id="btn-resign">
+            <span class="btn-icon">🏳</span> Đầu hàng
+          </button>
+        </div>
+      </div>
+
+      <!-- AI Settings -->
+      <div class="panel-card">
+        <div class="panel-title">🧠 ĐỘ MẠNH AI</div>
+        <div class="slider-group">
+          <label>Thời gian</label>
+          <input type="range" id="ai-time" min="100" max="10000" step="100" value="5000">
+          <span id="ai-time-label">5.0s</span>
+        </div>
+        <div id="engine-info"></div>
+      </div>
+
+      <!-- Move History -->
+      <div class="panel-card move-history-card">
+        <div class="panel-title">📜 LỊCH SỬ NƯỚC ĐI</div>
+        <div id="move-list"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────── -->
+  <footer class="footer">
+    Cờ Vua AI — Alpha-Beta + PeSTO Eval · Iterative Deepening · Quiescence · LMR · TT
+  </footer>
+
+  <!-- ── Menu Modal ──────────────────────────────────────── -->
+  <div class="overlay active" id="menu-overlay">
+    <div class="modal">
+      <h2 class="modal-title">♚ Cờ Vua</h2>
+      <p style="text-align: center; color: var(--text-muted); margin-bottom: 24px;">Chọn chế độ chơi</p>
+      <div class="menu-options">
+        <button class="menu-btn" id="menu-pvp">
+          <div class="menu-btn-icon">👥</div>
+          <div class="menu-btn-text">
+            <strong>Người vs Người (PvP)</strong>
+            <span>Hai người chơi trên cùng màn hình</span>
+          </div>
+        </button>
+        <button class="menu-btn" id="menu-pve-white">
+          <div class="menu-btn-icon">⬜</div>
+          <div class="menu-btn-text">
+            <strong>Chơi Trắng vs AI</strong>
+            <span>Bạn đi trước, AI đi quân Đen</span>
+          </div>
+        </button>
+        <button class="menu-btn" id="menu-pve-black">
+          <div class="menu-btn-icon">⬛</div>
+          <div class="menu-btn-text">
+            <strong>Chơi Đen vs AI</strong>
+            <span>AI đi trước, bạn đi quân Đen</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Promotion Modal ─────────────────────────────────── -->
+  <div class="promo-modal" id="promotion-modal">
+    <div class="promo-container">
+      <h3>Chọn quân phong cấp</h3>
+      <div class="promo-options">
+        <button class="promo-btn" data-type="5" title="Hậu">♛</button>
+        <button class="promo-btn" data-type="4" title="Xe">♜</button>
+        <button class="promo-btn" data-type="3" title="Tượng">♝</button>
+        <button class="promo-btn" data-type="2" title="Mã">♞</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Game Over Modal ─────────────────────────────────── -->
+  <div class="overlay" id="game-over-modal">
+    <div class="modal">
+      <div class="modal-title">Kết thúc ván đấu</div>
+      <div class="game-over-result" id="game-over-text"></div>
+      <div id="game-over-stats"></div>
+      <div class="game-over-buttons">
+        <button class="btn btn-accent" id="game-over-new">✨ Ván mới</button>
+        <button class="btn" id="game-over-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Scripts (Bundled) ────────────────────────────────── -->
+  <script src="app.js"></script>
+</body>
+</html>
