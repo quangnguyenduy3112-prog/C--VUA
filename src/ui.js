@@ -387,7 +387,7 @@ export class UI {
     const oAvatar = document.getElementById('opponent-avatar');
     
     // Update opponent name and avatar based on mode
-    if (this.game.mode === MODE_PVP) {
+    if (this.game.mode === MODE_PVP || this.game.mode === 'online') {
       oName.textContent = "Đối thủ";
       oAvatar.textContent = "👤"; // Or another appropriate emoji like 🥷 or 🧑‍💻
     } else {
