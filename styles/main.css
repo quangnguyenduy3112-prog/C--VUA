@@ -611,9 +611,15 @@ input[type="range"]::-webkit-slider-thumb {
 /* ── Mobile (portrait phones) ──────────────────────────── */
 @media (max-width: 900px) {
   html, body {
-    overflow-y: auto;
+    display: block;          /* bỏ flex hàng ngang của body */
+    width: 100%;
+    height: auto;
+    min-height: 100%;
     overflow-x: hidden;
+    overflow-y: auto;
   }
+  
+  body { overflow: visible; }
 
   .app-container {
     display: flex !important;
@@ -625,7 +631,7 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 12px;
     box-sizing: border-box;
     height: auto;
-    min-height: 100vh;
+    min-height: 0;
   }
 
   /* Hide left sidebar on mobile */
@@ -771,6 +777,9 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* Footer: compact */
   .footer {
+    display: block;
+    width: 100%;
+    text-align: center;
     position: relative;
     bottom: auto;
     font-size: 9px;
