@@ -610,10 +610,6 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* ── Mobile (portrait phones) ──────────────────────────── */
 @media (max-width: 768px) {
-  :root {
-    --board-size: calc(100vw - 12px); /* Fallback */
-  }
-
   html, body {
     overflow-y: auto;
     overflow-x: hidden;
@@ -623,8 +619,9 @@ input[type="range"]::-webkit-slider-thumb {
   .app-container {
     flex-direction: column;
     align-items: center;
-    padding: 6px;
-    gap: 6px;
+    justify-content: flex-start;
+    padding: 10px;
+    gap: 10px;
     height: auto;
     min-height: 100vh;
     overflow-y: auto;
@@ -640,19 +637,23 @@ input[type="range"]::-webkit-slider-thumb {
     width: 100%;
     flex: 0 0 auto;
     order: 1;
+    display: flex;
+    flex-direction: column;
     align-items: center;
   }
 
   /* FORCE BOARD DIMENSIONS FOR MOBILE */
   .board-wrapper {
-    width: calc(100vw - 12px) !important;
-    max-width: 100% !important;
+    width: 100% !important;
+    max-width: 500px !important;
+    aspect-ratio: 1 / 1 !important;
     border-radius: 4px;
+    margin: 0 auto;
     min-width: 0;
   }
   .chess-board {
     width: 100% !important;
-    height: calc(100vw - 12px) !important;
+    height: 100% !important;
     grid-template-columns: repeat(8, 1fr) !important;
     grid-template-rows: repeat(8, 1fr) !important;
     min-width: 0;
@@ -667,7 +668,8 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* Player profiles compact */
   .player-profile {
-    width: calc(100vw - 12px) !important;
+    width: 100% !important;
+    max-width: 500px !important;
     padding: 4px 0;
     height: 36px;
   }
@@ -696,8 +698,8 @@ input[type="range"]::-webkit-slider-thumb {
     padding-bottom: 60px;
   }
   .right-panel > * {
-    width: calc(100vw - 12px) !important;
-    max-width: 100%;
+    width: 100% !important;
+    max-width: 500px !important;
   }
 
   /* Compact panel cards */
@@ -727,12 +729,6 @@ input[type="range"]::-webkit-slider-thumb {
   /* Move history: shorter on mobile */
   #move-list {
     max-height: 120px;
-  }
-
-  /* Board wrapper: no overflow hidden cutting */
-  .board-wrapper {
-    border-radius: 2px;
-    max-width: 100%;
   }
 
   /* Modal: full-width on mobile */
