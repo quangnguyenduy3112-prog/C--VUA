@@ -157,6 +157,57 @@ export class UI {
       this.renderer.setFlipped(true);
       this.game.newGame(MODE_PVE, BLACK);
     });
+    document.getElementById('menu-online').addEventListener('click', () => {
+      this._hideMenu();
+      this._showNetworkChoice();
+    });
+
+    // Network UI
+    document.getElementById('btn-create-room').addEventListener('click', () => {
+      this._showNetworkWaiting("Đang khởi tạo phòng...");
+      if (this.game.network) {
+        this.game.network.onRoomCreated = (id) => {
+          document.getElementById('display-room-code').textContent = id;
+        };
+        this.game.network.onConnected = (isHost) => {
+          this._hideNetworkModal();
+          this.renderer.setFlipped(false); // Host is White
+          this.game.newGame(MODE_ONLINE, WHITE, true);
+        };
+        this.game.network.onError = (err) => {
+          alert(err);
+          this._showNetworkChoice();
+        };
+        this.game.network.createRoom();
+      }
+    });
+
+    document.getElementById('btn-join-room').addEventListener('click', () => {
+      const code = document.getElementById('input-room-code').value.trim().toUpperCase();
+      if (!code) {
+        alert("Vui lòng nhập mã phòng!");
+        return;
+      }
+      this._showNetworkWaiting("Đang kết nối tới phòng...");
+      if (this.game.network) {
+        this.game.network.onConnected = (isHost) => {
+          this._hideNetworkModal();
+          this.renderer.setFlipped(true); // Joiner is Black
+          this.game.newGame(MODE_ONLINE, BLACK, true);
+        };
+        this.game.network.onError = (err) => {
+          alert(err);
+          this._showNetworkChoice();
+        };
+        this.game.network.joinRoom(code);
+      }
+    });
+
+    document.getElementById('btn-cancel-network').addEventListener('click', () => {
+      if (this.game.network) this.game.network.disconnect();
+      this._hideNetworkModal();
+      this._showMenu();
+    });
 
     // AI difficulty slider
     const slider = document.getElementById('ai-time');
@@ -333,6 +384,26 @@ export class UI {
   }
   _hideMenu() {
     document.getElementById('menu-overlay').classList.remove('active');
+  }
+
+  /* ─── Network Modal ────────────────────────────────────── */
+  _showNetworkChoice() {
+    document.getElementById('network-overlay').classList.add('active');
+    document.getElementById('network-choice-view').style.display = 'block';
+    document.getElementById('network-waiting-view').style.display = 'none';
+    document.getElementById('input-room-code').value = '';
+  }
+
+  _showNetworkWaiting(msg) {
+    document.getElementById('network-choice-view').style.display = 'none';
+    const waitingView = document.getElementById('network-waiting-view');
+    waitingView.style.display = 'block';
+    waitingView.querySelector('span').textContent = msg;
+    document.getElementById('display-room-code').textContent = '...';
+  }
+
+  _hideNetworkModal() {
+    document.getElementById('network-overlay').classList.remove('active');
   }
 
   /* ─── Promotion dialog ─────────────────────────────────── */

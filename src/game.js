@@ -18,6 +18,7 @@ import {
 
 export const MODE_PVP = 'pvp';
 export const MODE_PVE = 'pve';
+export const MODE_ONLINE = 'online';
 
 export const STATUS_PLAYING   = 'playing';
 export const STATUS_CHECKMATE = 'checkmate';
@@ -111,6 +112,27 @@ export class Game {
     this.capturedBlack = [];    // pieces captured from black (white took them)
     this._pendingPromotion = null;
     this.moveCount = 0;
+    
+    // Setup Network
+    if (typeof NetworkManager !== 'undefined') {
+      this.network = new NetworkManager();
+      this.network.onMoveReceived = (moveObj) => {
+        this._executeMove(moveObj, true);
+      };
+      this.network.onEventReceived = (type, data) => {
+        if (type === 'RESIGN') {
+          this.resign(true);
+        } else if (type === 'NEW_GAME') {
+          this.newGame(MODE_ONLINE, this.playerColor === WHITE ? BLACK : WHITE, true);
+        }
+      };
+      this.network.onDisconnected = () => {
+        if (this.mode === MODE_ONLINE) {
+          // You could set status to something like STATUS_OPPONENT_LEFT
+          this._emit();
+        }
+      };
+    }
   }
 
   /** Subscribe to state changes. */
@@ -123,7 +145,11 @@ export class Game {
   }
 
   /** Start a new game. */
-  newGame(mode, playerColor = WHITE) {
+  newGame(mode, playerColor = WHITE, fromNetwork = false) {
+    if (mode === MODE_ONLINE && !fromNetwork && this.network) {
+      this.network.sendEvent('NEW_GAME');
+    }
+
     this.board.reset();
     this.engine.reset();
     this.mode        = mode;
@@ -151,6 +177,7 @@ export class Game {
   /** Is it the human player's turn? */
   isPlayerTurn() {
     if (this.mode === MODE_PVP) return true;
+    if (this.mode === MODE_ONLINE) return this.board.turn === this.playerColor;
     return this.board.turn === this.playerColor;
   }
 
@@ -230,7 +257,11 @@ export class Game {
   }
 
   /** Execute a move on the board. */
-  _executeMove(move) {
+  _executeMove(move, fromNetwork = false) {
+    if (this.mode === MODE_ONLINE && !fromNetwork && this.network) {
+      this.network.sendMove(move);
+    }
+
     // Record SAN before making the move
     const san = moveToSAN(move, this.board);
 
@@ -353,8 +384,13 @@ export class Game {
   }
 
   /** Resign the current game. */
-  resign() {
+  resign(fromNetwork = false) {
     if (this.status !== STATUS_PLAYING) return;
+    
+    if (this.mode === MODE_ONLINE && !fromNetwork && this.network) {
+      this.network.sendEvent('RESIGN');
+    }
+
     this.status = STATUS_RESIGN;
     if (this.mode === MODE_PVE) {
       this.winner = this.playerColor === WHITE ? BLACK : WHITE;

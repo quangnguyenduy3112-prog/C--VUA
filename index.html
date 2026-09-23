@@ -132,6 +132,39 @@
             <span>AI đi trước, bạn đi quân Đen</span>
           </div>
         </button>
+        <button class="menu-btn" id="menu-online" style="background: var(--accent-glow); color: var(--accent-bright);">
+          <div class="menu-btn-icon">🌐</div>
+          <div class="menu-btn-text">
+            <strong>Chơi Online (Ghép phòng)</strong>
+            <span>Kết nối 2 máy qua mã phòng (P2P)</span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Network Modal ────────────────────────────────────── -->
+  <div class="overlay" id="network-overlay">
+    <div class="modal" id="network-modal">
+      <h2 class="modal-title">Ghép Phòng Online</h2>
+      
+      <div id="network-choice-view">
+        <button class="btn btn-large btn-accent" id="btn-create-room">Tạo Phòng Mới</button>
+        <div style="text-align:center; margin: 10px 0; color:var(--text-muted);">HOẶC</div>
+        <div style="display:flex; gap: 8px;">
+          <input type="text" id="input-room-code" placeholder="Nhập mã phòng..." style="flex:1; padding: 10px; border-radius: 4px; border: 1px solid #4b4947; background: #262421; color: #fff; font-size: 16px; text-transform: uppercase;">
+          <button class="btn" id="btn-join-room">Vào Phòng</button>
+        </div>
+      </div>
+      
+      <div id="network-waiting-view" style="display: none; text-align: center;">
+        <p style="color: var(--text-secondary); margin-bottom: 10px;">Mã phòng của bạn là:</p>
+        <h1 id="display-room-code" style="font-size: 32px; letter-spacing: 4px; color: var(--accent-bright); margin-bottom: 20px;">...</h1>
+        <div class="thinking-indicator" style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <div class="spinner"></div>
+          <span>Đang chờ đối thủ vào...</span>
+        </div>
+        <button class="btn" id="btn-cancel-network">Hủy</button>
       </div>
     </div>
   </div>
@@ -162,7 +195,8 @@
     </div>
   </div>
 
-  <!-- ── Scripts (Bundled) ────────────────────────────────── -->
+  <!-- ── Scripts ──────────────────────────────────────────── -->
+  <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

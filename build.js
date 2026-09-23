@@ -19,6 +19,7 @@ const files = [
   'notation.js',
   'search.js',
   'engine.js',
+  'network.js',
   'game.js',
   'renderer.js',
   'ui.js',
