@@ -383,6 +383,18 @@ export class UI {
     // Player and opponent turn status
     const pStatus = document.getElementById('player-status');
     const oStatus = document.getElementById('opponent-status');
+    const oName = document.getElementById('opponent-name');
+    const oAvatar = document.getElementById('opponent-avatar');
+    
+    // Update opponent name and avatar based on mode
+    if (this.game.mode === MODE_PVP) {
+      oName.textContent = "Đối thủ";
+      oAvatar.textContent = "👤"; // Or another appropriate emoji like 🥷 or 🧑‍💻
+    } else {
+      oName.textContent = "Máy tính";
+      oAvatar.textContent = "🤖";
+    }
+
     const isPlayerWhite = this.game.playerColor === WHITE;
     const isPlayerTurn = this.game.isPlayerTurn();
     
