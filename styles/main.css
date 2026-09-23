@@ -644,32 +644,30 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* FORCE BOARD DIMENSIONS FOR MOBILE */
   .board-wrapper {
-    width: 100% !important;
-    max-width: 500px !important;
+    width: 94vw !important;
+    max-width: 94vw !important;
     aspect-ratio: 1 / 1 !important;
+    height: auto !important;
     border-radius: 4px;
-    margin: 0 auto;
-    min-width: 0;
+    margin: 0 auto !important;
+    display: block;
   }
   .chess-board {
     width: 100% !important;
     height: 100% !important;
     grid-template-columns: repeat(8, 1fr) !important;
     grid-template-rows: repeat(8, 1fr) !important;
-    min-width: 0;
-    min-height: 0;
   }
   .square {
     width: 100% !important;
     height: 100% !important;
-    min-width: 0;
-    min-height: 0;
   }
 
   /* Player profiles compact */
   .player-profile {
-    width: 100% !important;
-    max-width: 500px !important;
+    width: 94vw !important;
+    max-width: 94vw !important;
+    margin: 0 auto !important;
     padding: 4px 0;
     height: 36px;
   }
@@ -698,8 +696,9 @@ input[type="range"]::-webkit-slider-thumb {
     padding-bottom: 60px;
   }
   .right-panel > * {
-    width: 100% !important;
-    max-width: 500px !important;
+    width: 94vw !important;
+    max-width: 94vw !important;
+    margin: 0 auto !important;
   }
 
   /* Compact panel cards */
