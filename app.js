@@ -3370,15 +3370,99 @@ class UI {
       }
     });
 
-    // Touch support for mobile
+    // ── Mobile Touch: Drag-and-Drop + Tap ────────────────────
+    this._touchDragState = null;
+
     this.renderer.boardEl.addEventListener('touchstart', (e) => {
       const touch = e.touches[0];
       const squareEl = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.square');
       if (!squareEl) return;
       const sq = parseInt(squareEl.dataset.sq);
       if (isNaN(sq)) return;
-      this.game.clickSquare(sq);
-    }, { passive: true });
+
+      const piece = this.game.board.squares[sq];
+      const isOwnPiece = piece !== 0 &&
+        this.game.status === STATUS_PLAYING &&
+        !this.game.isThinking &&
+        this.game.isPlayerTurn() &&
+        pieceColor(piece) === this.game.board.turn;
+
+      // If it's our own piece, start a drag
+      if (isOwnPiece) {
+        e.preventDefault();
+        this.game.clickSquare(sq); // Select the piece (shows legal moves)
+
+        const pieceEl = squareEl.querySelector('.piece');
+        if (!pieceEl) return;
+
+        const boardRect = this.renderer.boardEl.getBoundingClientRect();
+        const sqSize = boardRect.width / 8;
+
+        // Create ghost piece
+        const ghost = pieceEl.cloneNode(true);
+        ghost.className = 'piece dragging-piece';
+        ghost.style.cssText = `
+          position: fixed;
+          width: ${sqSize * 0.95}px;
+          height: ${sqSize * 0.95}px;
+          pointer-events: none;
+          z-index: 1000;
+          opacity: 0.9;
+          filter: drop-shadow(0 6px 16px rgba(0,0,0,0.6));
+          transform: scale(1.2);
+          transition: none;
+        `;
+        ghost.style.left = (touch.clientX - sqSize * 0.475) + 'px';
+        ghost.style.top = (touch.clientY - sqSize * 0.95) + 'px'; // Offset above finger
+        document.body.appendChild(ghost);
+
+        pieceEl.style.opacity = '0.3';
+
+        this._touchDragState = {
+          sq,
+          ghost,
+          pieceEl,
+          sqSize,
+          boardRect,
+          moved: false,
+        };
+      } else {
+        // Tapping on empty/enemy square to complete a move (if piece already selected)
+        this.game.clickSquare(sq);
+      }
+    }, { passive: false });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!this._touchDragState) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const { ghost, sqSize } = this._touchDragState;
+      ghost.style.left = (touch.clientX - sqSize * 0.475) + 'px';
+      ghost.style.top = (touch.clientY - sqSize * 0.95) + 'px';
+      this._touchDragState.moved = true;
+    }, { passive: false });
+
+    document.addEventListener('touchend', (e) => {
+      if (!this._touchDragState) return;
+      const { ghost, pieceEl, boardRect, sqSize, sq: fromSq, moved } = this._touchDragState;
+
+      ghost.remove();
+      if (pieceEl) pieceEl.style.opacity = '';
+      this._touchDragState = null;
+
+      if (!moved) return; // Pure tap, already handled by touchstart
+
+      const touch = e.changedTouches[0];
+      const col = Math.floor((touch.clientX - boardRect.left) / sqSize);
+      const row = Math.floor((touch.clientY - boardRect.top) / sqSize);
+
+      if (col >= 0 && col < 8 && row >= 0 && row < 8) {
+        const dropSq = this.renderer.visualToSq(row, col);
+        if (dropSq !== fromSq) {
+          this.game.clickSquare(dropSq);
+        }
+      }
+    });
 
     // New game button
     document.getElementById('btn-new-game').addEventListener('click', () => this._showMenu());

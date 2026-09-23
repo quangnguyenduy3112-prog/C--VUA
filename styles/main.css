@@ -586,3 +586,207 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--text-muted);
   z-index: 10;
 }
+
+/* ============================================================
+ *  MOBILE RESPONSIVE — Only additions, no overrides to desktop
+ * ============================================================ */
+
+/* ── Tablets (landscape + small laptops) ────────────────── */
+@media (max-width: 1024px) {
+  .app-container {
+    padding: 16px;
+    gap: 12px;
+  }
+  .left-sidebar {
+    display: none;
+  }
+  .right-panel > * {
+    width: 260px;
+  }
+  :root {
+    --board-size: min(80vh, 520px);
+  }
+}
+
+/* ── Mobile (portrait phones) ──────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --board-size: calc(100vw - 20px);
+    --sq-size: calc(var(--board-size) / 8);
+  }
+
+  html, body {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
+  }
+
+  .app-container {
+    flex-direction: column;
+    align-items: center;
+    padding: 6px;
+    gap: 6px;
+    height: auto;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Hide left sidebar on mobile */
+  .left-sidebar {
+    display: none;
+  }
+
+  /* Board area: full width, centered */
+  .main-board-area {
+    width: 100%;
+    flex: 0 0 auto;
+    order: 1;
+    align-items: center;
+  }
+
+  /* Player profiles compact */
+  .player-profile {
+    width: var(--board-size);
+    padding: 4px 0;
+    height: 36px;
+  }
+  .avatar {
+    width: 26px;
+    height: 26px;
+    font-size: 16px;
+  }
+  .player-name {
+    font-size: 12px;
+  }
+  .player-status {
+    font-size: 10px;
+  }
+  .captured-pieces {
+    font-size: 14px;
+  }
+
+  /* Right panel: below board, full width, horizontal-friendly */
+  .right-panel {
+    order: 2;
+    width: 100%;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 60px;
+  }
+  .right-panel > * {
+    width: var(--board-size);
+    max-width: 100%;
+  }
+
+  /* Compact panel cards */
+  .panel-card {
+    padding: 10px;
+    border-radius: 6px;
+  }
+  .panel-title {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .status-main-text {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  /* Compact buttons */
+  .btn {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  .btn-large {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  /* Move history: shorter on mobile */
+  #move-list {
+    max-height: 120px;
+  }
+
+  /* Board wrapper: no overflow hidden cutting */
+  .board-wrapper {
+    border-radius: 2px;
+    max-width: 100%;
+  }
+
+  /* Modal: full-width on mobile */
+  .modal {
+    width: calc(100vw - 32px);
+    max-width: 400px;
+    padding: 16px;
+    border-radius: 10px;
+  }
+  .menu-btn {
+    padding: 12px;
+    gap: 12px;
+  }
+  .menu-btn-icon {
+    font-size: 20px;
+  }
+  .menu-btn-text strong {
+    font-size: 14px;
+  }
+  .menu-btn-text span {
+    font-size: 11px;
+  }
+
+  /* Promotion modal: smaller on mobile */
+  .promo-btn {
+    width: 52px;
+    height: 52px;
+    font-size: 32px;
+  }
+
+  /* Footer: compact */
+  .footer {
+    position: relative;
+    bottom: auto;
+    font-size: 9px;
+    padding: 6px;
+    order: 3;
+  }
+}
+
+/* ── Very small phones (320px - 380px) ─────────────────── */
+@media (max-width: 380px) {
+  :root {
+    --board-size: min(98vw, 98vw);
+  }
+  .app-container {
+    padding: 4px;
+    gap: 6px;
+  }
+  .player-profile {
+    height: 30px;
+    padding: 2px 0;
+  }
+  .avatar {
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
+  }
+  .player-name {
+    font-size: 11px;
+  }
+  .captured-pieces {
+    font-size: 12px;
+  }
+}
+
+/* ── Mobile touch: prevent text selection while dragging ── */
+@media (hover: none) and (pointer: coarse) {
+  .chess-board {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .square {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
