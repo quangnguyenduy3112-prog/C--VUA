@@ -609,22 +609,23 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 /* ── Mobile (portrait phones) ──────────────────────────── */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   html, body {
     overflow-y: auto;
     overflow-x: hidden;
-    align-items: flex-start;
   }
 
   .app-container {
-    flex-direction: column;
-    align-items: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
     justify-content: flex-start;
-    padding: 10px;
-    gap: 10px;
+    width: 100% !important;
+    padding: 8px !important;
+    gap: 12px;
+    box-sizing: border-box;
     height: auto;
     min-height: 100vh;
-    overflow-y: auto;
   }
 
   /* Hide left sidebar on mobile */
@@ -644,13 +645,13 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* FORCE BOARD DIMENSIONS FOR MOBILE */
   .board-wrapper {
-    width: 94vw !important;
-    max-width: 94vw !important;
+    width: min(100vw - 16px, 560px) !important;
     aspect-ratio: 1 / 1 !important;
     height: auto !important;
     border-radius: 4px;
     margin: 0 auto !important;
     display: block;
+    min-width: 0 !important;
   }
   .chess-board {
     width: 100% !important;
@@ -669,12 +670,13 @@ input[type="range"]::-webkit-slider-thumb {
   .piece {
     min-width: 0 !important;
     min-height: 0 !important;
+    max-width: 95%;
+    max-height: 95%;
   }
 
   /* Player profiles compact */
   .player-profile {
-    width: 94vw !important;
-    max-width: 94vw !important;
+    width: min(100vw - 16px, 560px) !important;
     margin: 0 auto !important;
     padding: 4px 0;
     height: 36px;
@@ -699,13 +701,14 @@ input[type="range"]::-webkit-slider-thumb {
     order: 2;
     width: 100%;
     flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 8px;
     padding-bottom: 60px;
   }
   .right-panel > * {
-    width: 94vw !important;
-    max-width: 94vw !important;
+    width: min(100vw - 16px, 560px) !important;
     margin: 0 auto !important;
   }
 
