@@ -611,8 +611,7 @@ input[type="range"]::-webkit-slider-thumb {
 /* ── Mobile (portrait phones) ──────────────────────────── */
 @media (max-width: 768px) {
   :root {
-    --board-size: calc(100vw - 20px);
-    --sq-size: calc(var(--board-size) / 8);
+    --board-size: calc(100vw - 12px); /* Fallback */
   }
 
   html, body {
@@ -644,9 +643,26 @@ input[type="range"]::-webkit-slider-thumb {
     align-items: center;
   }
 
+  /* FORCE BOARD DIMENSIONS FOR MOBILE */
+  .board-wrapper {
+    width: calc(100vw - 12px) !important;
+    max-width: 100% !important;
+    border-radius: 4px;
+  }
+  .chess-board {
+    width: 100% !important;
+    height: calc(100vw - 12px) !important;
+    grid-template-columns: repeat(8, 1fr) !important;
+    grid-template-rows: repeat(8, 1fr) !important;
+  }
+  .square {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
   /* Player profiles compact */
   .player-profile {
-    width: var(--board-size);
+    width: calc(100vw - 12px) !important;
     padding: 4px 0;
     height: 36px;
   }
@@ -675,7 +691,7 @@ input[type="range"]::-webkit-slider-thumb {
     padding-bottom: 60px;
   }
   .right-panel > * {
-    width: var(--board-size);
+    width: calc(100vw - 12px) !important;
     max-width: 100%;
   }
 
